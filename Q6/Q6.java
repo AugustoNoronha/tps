@@ -1,7 +1,6 @@
 package Q6;
 
 import java.util.Scanner;
-
 public class Q6 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in, "UTF-8"); // SET DO SCANER COM TIPO DE TECLADO
@@ -11,7 +10,7 @@ public class Q6 {
 
         do {
             entrada[n] = sc.nextLine(); // LEITURA DA LINHA DE ENTRADA
-        } while (!(isFim(entrada[n++]))); // CONDIÇÃO DE PARADA
+        } while (!(isFim(entrada[n++]))); // CONDIÃ‡ÃƒO DE PARADA
         n--; // tirar o FIM
 
         // Function to find whether an input
@@ -93,32 +92,32 @@ public class Q6 {
 
             boolean rel = isNumber(entrada[i]);
             if (rel == true) {
-                MyIO.print("SIM");
+                MyIO.println("SIM");
             } else {
-                MyIO.print("NAO");
+                MyIO.println("NAO");
             }
-            MyIO.println("\n");
         }
         sc.close(); // fecha o scanner
 
     }
-
     // The Driver code
-
-    static boolean isFim(String s) {
-        return (s.length() == 3 && s.charAt(0) == 'F' && s.charAt(1) == 'I' && s.charAt(2) == 'M'); // metodo de
-                                                                                                    // condição de
-        // parada
-    }
-
     private static boolean isInteger(String str) {
         return str != null && str.matches("[0-9]*");
     }
 
-    private static boolean isNumber(String str) {
-
-        return str != null && str.matches("^([+-]?\\d*\\.?\\d*)$");
-
+    private static boolean isNumber(String s) {
+    boolean xb = true;
+        try{
+            double x = Double.parseDouble(s);
+        }catch(Exception e){
+            xb = false;
+        }
+    return xb;
     }
 
+       static boolean isFim(String s) {
+        return (s.length() == 3 && s.charAt(0) == 'F' && s.charAt(1) == 'I' && s.charAt(2) == 'M'); // metodo de
+                                                                                                    // condiÃ§Ã£o de
+        // parada
+    }
 }
