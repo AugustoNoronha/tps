@@ -1,6 +1,7 @@
 import java.io.File;
 import java.util.*;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 class q4 {
     public static void main(String[] args) throws Exception {
@@ -55,6 +56,8 @@ class q4 {
             arr[co] = Integer.parseInt(entrada[co]);
         }
 
+        Arrays.sort(arr);
+        
 
         for (int k = 0; k < n; k++) {
             buscaBinariaRecursiva(arr, 0, n - 1, obj[k].getAppId());
