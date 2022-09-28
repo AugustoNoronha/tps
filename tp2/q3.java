@@ -6,6 +6,7 @@ class q3 {
     public static void main(String[] args) throws Exception {
         String[] entrada = new String[1000]; // SET DE ENTRADA
         String[] entradaNomes = new String[1000]; // SET DE ENTRADA
+        Lista list = new Lista(100);
 
         Scanner scanner = new Scanner(new File("/tmp/games.csv"));
         // Scanner scanner = new Scanner(new File(" D:\\Users\\1412485\\Desktop\\tps\\tp2\\games.csv"));
@@ -24,8 +25,7 @@ class q3 {
         while (scanner.hasNext()) {
             obj[count] = new Games();
 
-            String[] lineFilter = scanner.nextLine().split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-
+            String[] lineFilter = scanner.nextLine().trim().split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
             obj[count].setAppId(Integer.parseInt(lineFilter[0]));
             obj[count].setName(lineFilter[1]);
             String dateFormate = lineFilter[2].replace("\"", "");
@@ -55,11 +55,10 @@ class q3 {
         int stop = 0;
         do {
             entrada[n] = MyIO.readLine();
-            MyIO.println(entrada[n]);
+            // MyIO.println(entrada[n]);
 
-            stop++;
            
-        } while (!(isFim(entrada[n++],contador ))); // CONDIÇÃO DE PARADA
+        } while (!(isFim(entrada[n++]))); // CONDIÇÃO DE PARADA
         n--; // tirar o FIM
 
        
@@ -67,37 +66,33 @@ class q3 {
         for (int k = 0; k < n; k++) {
             for (int u = 0; u < obj.length; u++) {
                 if (Integer.parseInt(entrada[k]) == obj[u].getAppId()) {
-                    objFilter[k] = obj[u];
+                    list.inserirFim(obj[u]);
                 }
             }
         }
 
-
-
-        for (int k = 0; k < n; k++) {
-            MyIO.println(entrada[k]);
-        //         MyIO.println(entrada[k]);
-
-        //     for (int u = 0; u < objFilter.length; u++) {
-        //         MyIO.println(obj[u].getName());
-
-        //         if (entrada[k] == obj[u].getName()) {
-        //             MyIO.println("SIM");
-        //          }
-        //     }
-        //     MyIO.println("NAO");
-
-            
-        }
+        boolean finder = true;
+        entradaNomes[n] = MyIO.readLine();
+        while (!(isFim(entradaNomes[n]))){ // CONDIÇÃO DE PARADA
+            for (int u = 0; u < objFilter.length; u++) {
+               finder = list.pesquisar(entradaNomes[n]);
+               if(finder){
+                MyIO.println("SIM");
+                u = objFilter.length;
+               }
+            }
+            if(!finder)
+                MyIO.println("NAO");
+            n++;
+            entradaNomes[n] = MyIO.readLine();
+        } 
+        n--; // tirar o FI     
 
     }
 
-    static boolean isFim(String s, int x) {
-        if(s.length() == 3 && s.charAt(0) == 'F' && s.charAt(1) == 'I' && s.charAt(2) == 'M' && x == 1){
-            return true;
-        }else{
-            return  false;
-        }
+    static boolean isFim(String s) {
+        return (s.length() == 3 && s.charAt(0) == 'F' && s.charAt(1) == 'I' && s.charAt(2) == 'M');
+
     }
 
     static class Games {
@@ -276,4 +271,183 @@ class q3 {
             this.genres = genres;
         }
     }
+
+    static class Lista {
+        private Games[] array;
+        private int n;
+
+        /**
+         * Construtor da classe.
+         */
+        public Lista() {
+            this(6);
+        }
+
+        /**
+         * Construtor da classe.
+         * 
+         * @param tamanho Tamanho da lista.
+         */
+        public Lista(int tamanho) {
+            array = new Games[tamanho];
+            n = 0;
+        }
+
+        /**
+         * Insere um elemento na primeira posicao da lista e move os demais
+         * elementos para o fim da lista.
+         * 
+         * @param x int elemento a ser inserido.
+         * @throws Exception Se a lista estiver cheia.
+         */
+        public void inserirInicio(Games x) throws Exception {
+
+            // validar insercao
+            if (n >= array.length) {
+                throw new Exception("Erro ao inserir!");
+            }
+
+            // levar elementos para o fim do array
+            for (int i = n; i > 0; i--) {
+                array[i] = array[i - 1];
+            }
+
+            array[0] = x;
+            n++;
+        }
+
+        /**
+         * Insere um elemento na ultima posicao da lista.
+         * 
+         * @param x int elemento a ser inserido.
+         * @throws Exception Se a lista estiver cheia.
+         */
+        public void inserirFim(Games x) throws Exception {
+
+            // validar insercao
+            if (n >= array.length) {
+                throw new Exception("Erro ao inserir!");
+            }
+
+            array[n] = x;
+            n++;
+        }
+
+        /**
+         * Insere um elemento em uma posicao especifica e move os demais
+         * elementos para o fim da lista.
+         * 
+         * @param x   int elemento a ser inserido.
+         * @param pos Posicao de insercao.
+         * @throws Exception Se a lista estiver cheia ou a posicao invalida.
+         */
+        public void inserir(Games x, int pos) throws Exception {
+
+            // validar insercao
+            if (n >= array.length || pos < 0 || pos > n) {
+                throw new Exception("Erro ao inserir!");
+            }
+
+            // levar elementos para o fim do array
+            for (int i = n; i > pos; i--) {
+                array[i] = array[i - 1];
+            }
+
+            array[pos] = x;
+            n++;
+        }
+
+        /**
+         * Remove um elemento da primeira posicao da lista e movimenta
+         * os demais elementos para o inicio da mesma.
+         * 
+         * @return resp int elemento a ser removido.
+         * @throws Exception Se a lista estiver vazia.
+         */
+        public Games removerInicio() throws Exception {
+
+            // validar remocao
+            if (n == 0) {
+                throw new Exception("Erro ao remover!");
+            }
+
+            Games resp = array[0];
+            n--;
+
+            for (int i = 0; i < n; i++) {
+                array[i] = array[i + 1];
+            }
+
+            return resp;
+        }
+
+        /**
+         * Remove um elemento da ultima posicao da lista.
+         * 
+         * @return resp int elemento a ser removido.
+         * @throws Exception Se a lista estiver vazia.
+         */
+        public Games removerFim() throws Exception {
+
+            // validar remocao
+            if (n == 0) {
+                throw new Exception("Erro ao remover!");
+            }
+
+            return array[--n];
+        }
+
+        /**
+         * Remove um elemento de uma posicao especifica da lista e
+         * movimenta os demais elementos para o inicio da mesma.
+         * 
+         * @param pos Posicao de remocao.
+         * @return resp int elemento a ser removido.
+         * @throws Exception Se a lista estiver vazia ou a posicao for invalida.
+         */
+        public Games remover(int pos) throws Exception {
+
+            // validar remocao
+            if (n == 0 || pos < 0 || pos >= n) {
+                throw new Exception("Erro ao remover!");
+            }
+
+            Games resp = array[pos];
+            n--;
+
+            for (int i = pos; i < n; i++) {
+                array[i] = array[i + 1];
+            }
+
+            return resp;
+        }
+
+        /**
+         * Mostra os elementos da lista separados por espacos.
+         */
+        public void mostrar() {
+            System.out.print("[ ");
+            for (int i = 0; i < n; i++) {
+                System.out.print(array[i] + " ");
+            }
+            System.out.println("]");
+        }
+
+        /**
+         * Procura um elemento e retorna se ele existe.
+         * 
+         * @param x int elemento a ser pesquisado.
+         * @return <code>true</code> se o array existir,
+         *         <code>false</code> em caso contrario.
+         */
+        public boolean pesquisar(String x) {
+            boolean retorno = false;
+            for (int i = 0; i < n && retorno == false; i++) {
+                //System.out.println(array[i].getName() + "\t" + x);
+                retorno = array[i].getName().compareTo(x) == 0;
+            }
+            return retorno;
+        }
+    }
+
 }
