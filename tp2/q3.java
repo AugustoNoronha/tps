@@ -51,12 +51,17 @@ class q3 {
         }
         scanner.close();
 
+        int contador = 0;
+        int stop = 0;
         do {
             entrada[n] = MyIO.readLine();
-            // System.out.println(entrada[n]);
-            // LEITURA DA LINHA DE ENTRADA
-        } while (!(isFim(entrada[n++]))); // CONDIÇÃO DE PARADA
+            MyIO.println(entrada[n]);
+
+            stop++;
+           
+        } while (!(isFim(entrada[n++],contador ))); // CONDIÇÃO DE PARADA
         n--; // tirar o FIM
+
        
 
         for (int k = 0; k < n; k++) {
@@ -67,32 +72,32 @@ class q3 {
             }
         }
 
-        do {
-            entradaNomes[x] = MyIO.readLine();
-            // LEITURA DA LINHA DE ENTRADA
-        } while (!(isFim(entrada[x++]))); // CONDIÇÃO DE PARADA
-        x--; // tirar o FIM
 
-        for (int k = 0; k < objFilter.length; k++) {
 
-            for (int u = 0; u < objFilter.length; u++) {
-                // MyIO.println(obj[u].getName());
+        for (int k = 0; k < n; k++) {
+            MyIO.println(entrada[k]);
+        //         MyIO.println(entrada[k]);
 
-                if (entradaNomes[k] == obj[u].getName()) {
-                    MyIO.println("SIM");
-                 }
-            }
-            MyIO.println("NAO");
+        //     for (int u = 0; u < objFilter.length; u++) {
+        //         MyIO.println(obj[u].getName());
+
+        //         if (entrada[k] == obj[u].getName()) {
+        //             MyIO.println("SIM");
+        //          }
+        //     }
+        //     MyIO.println("NAO");
 
             
         }
 
     }
 
-    static boolean isFim(String s) {
-        return (s.length() == 3 && s.charAt(0) == 'F' && s.charAt(1) == 'I' && s.charAt(2) == 'M'); // metodo de//
-                                                                                                    // condição de //
-                                                                                                    // parada
+    static boolean isFim(String s, int x) {
+        if(s.length() == 3 && s.charAt(0) == 'F' && s.charAt(1) == 'I' && s.charAt(2) == 'M' && x == 1){
+            return true;
+        }else{
+            return  false;
+        }
     }
 
     static class Games {

@@ -12,7 +12,7 @@ public class Q11 {
             entrada[n] = sc.nextLine(); // LEITURA DA LINHA DE ENTRADA
             int j = entrada[n].length() -1;
             boolean x = isPalindromo(entrada[n], 0, j);
-            System.out.println(x == true ? "SIM" : "NAO");
+            MyIO.println(x == true ? "SIM" : "NAO");
         } while (!(isFim(entrada[n++]))); // CONDI��O DE PARADA
         n--; // tirar o FIM
 
