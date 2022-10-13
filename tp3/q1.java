@@ -2,72 +2,86 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class q4 {
+public class q1{
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String [] args) throws Exception {
 
-        String[] entrada = new String[1000];
-        String[] segundaEntrada = new String[1000];
-        Scanner sc = new Scanner(new File("/tmp/games.csv"));
-        Scanner scanner = new Scanner(System.in, "UTF-8");
-        int n = 0, count = 0, m = 0;
-        Games[] obj = new Games[4403];
+        String [] entrada = new String [1000];
+        Scanner sc = new Scanner(new File("/tmp/games.csv")); //    /tmp/games.csv
+        Scanner scanner = new Scanner(System.in, "ISO-8859-1");
+
+        int n = 0, count = 0;
+
+        Games [] obj = new Games[4403]; 
+
         Lista lista = new Lista();
 
         while (sc.hasNext()) {
-
+                
             obj[count] = new Games();
+
             String[] lineFilter = sc.nextLine().split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+
             obj[count].setAppId(Integer.parseInt(lineFilter[0]));
+
             obj[count].setName(lineFilter[1]);
+
             String dateFormate = lineFilter[2].replace("\"", "");
             String date = dateFormate.substring(0, 3) + "/"
                     + dateFormate.substring(dateFormate.length() - 4, dateFormate.length());
             obj[count].setDate((new SimpleDateFormat("MMM/yyyy", Locale.US).parse(date)));
+
             obj[count].setOwners(lineFilter[3]);
+
             obj[count].setAge(Integer.parseInt(lineFilter[4]));
+
             obj[count].setPrice(Float.parseFloat(lineFilter[5]));
+
             obj[count].setDlcs(Integer.parseInt(lineFilter[6]));
+
             obj[count].setLanguages(lineFilter[7].split("(\"\\[')|(', ')|('\\]\")"));
+
             obj[count].setWebsite(lineFilter[8]);
+
             obj[count].setWindows(Boolean.valueOf(lineFilter[9]));
+
             obj[count].setMac(Boolean.valueOf(lineFilter[10]));
+
             obj[count].setLinux(Boolean.valueOf(lineFilter[11]));
+
             obj[count].setUpVotes(Float.parseFloat(lineFilter[12])
                     / (Float.parseFloat(lineFilter[12]) + Float.parseFloat(lineFilter[13])));
+
             obj[count].setAvg_pt(Integer.parseInt(lineFilter[14]));
+
             obj[count].setDevelopers(lineFilter[15]);
+
             obj[count].setGenres((lineFilter.length > 16) ? lineFilter[16].split(",") : null);
             count++;
+
+
         }
+
         do {
 
             entrada[n] = scanner.nextLine();
         } while (!(isFim(entrada[n++])));
         n--;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < count; j++) {
 
-                if (Integer.parseInt(entrada[i]) == obj[j].getAppId()) {
-
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < count; j++) {
+                if(Integer.parseInt(entrada[i]) == obj[j].getAppId()){
                     lista.inserirFim(obj[j]);
-                    // obj[j].imprimir();
                 }
             }
         }
-        do {
-            segundaEntrada[m] = scanner.nextLine();
-        } while (!(isFim(segundaEntrada[m++])));
-        m--;
-        for (int k = 0; k < m; k++) {
-            if (lista.pesquisar(segundaEntrada[k]) == false) {
-                System.out.println("NAO");
-            } else {
-                System.out.println("SIM");
-            }
-        }
+
+        lista.selecSort();
+        lista.mostrar();
+
         sc.close();
         scanner.close();
+
     }
 
     static boolean isFim(String s) {
@@ -76,106 +90,152 @@ public class q4 {
 }
 
 class Lista {
-    private Games[] array;
+    
+
+    //ATRIBUTOS ----------------------------------------------------------------------------------- ATRIBUTOS
+    private Games [] array;
     private int n;
 
-    public Lista() {
+    //CONSTRUTORES -------------------------------------------------------------------------------- CONSTRUTORES
+    public Lista(){
         this(1000);
     }
 
     public Lista(int tam) {
-        array = new Games[1000];
+        array = new Games [1000];
         n = 0;
     }
 
-    public void inserirInicio(Games s) throws Exception { // Inserir Inicio
-        if (n >= array.length) {
+    //METODOS ------------------------------------------------------------------------------------- METODOS
+    public void inserirInicio(Games s) throws Exception {                                       // Inserir Inicio
+
+        if(n >= array.length) {
             throw new Exception("Tamanho da Lista Excedido");
         }
-        for (int i = n; i > 0; i--) {
-            array[i] = array[i - 1];
+
+        for(int i = n; i > 0; i--) {
+            array[i] = array[i-1];
         }
+
         array[0] = s;
         n++;
     }
 
-    public void inserirFim(Games s) throws Exception { // Inserir Fim
-        if (n >= array.length) {
+    public void inserirFim(Games s) throws Exception {                                          // Inserir Fim
+
+        if(n >= array.length) {
             throw new Exception("Tamanho da Lista Excedido");
         }
+
         array[n] = s;
         n++;
     }
 
-    public void inserir(Games s, int pos) throws Exception { // Inserir
-        if (n >= array.length) {
+    public void inserir(Games s, int pos) throws Exception {                                    // Inserir        
+
+        if(n >= array.length) {
             throw new Exception("Tamanho da Lista Excedido");
         }
-        for (int i = n; i > pos; i--) {
-            array[i] = array[i - 1];
+
+        for(int i = n; i > pos; i--) {
+            array[i] = array[i-1];
         }
+
         array[pos] = s;
         n++;
     }
 
-    public Games removerInicio() throws Exception { // Remover Inicio
-        if (n == 0) {
+    public String removerInicio() throws Exception {                                             // Remover Inicio
+
+        if(n == 0) {
             throw new Exception("Lista vazia");
         }
-        Games resp = array[0];
+
+        String resp = array[0].getName();
         n--;
-        for (int i = 0; i < n; i++) {
-            array[i] = array[i + 1];
+
+        for(int i = 0; i < n; i++) {
+            array[i] = array[i+1];
         }
+
         return resp;
     }
 
-    public Games removerFim() throws Exception { // Remover Fim
-        if (n == 0) {
+    public String removerFim() throws Exception {                                                // Remover Fim
+
+        if(n==0) {
             throw new Exception("Lista vazia");
         }
-        return array[--n];
+
+        return array[--n].getName();
     }
 
-    public Games remover(int pos) throws Exception { // Remover
+    public String remover(int pos) throws Exception {                                            // Remover
 
-        if (n == 0 || pos < 0 || pos >= n) {
+        if(n == 0 || pos < 0 || pos >= n) {
             throw new Exception("Posicao inexistente da Lista");
         }
 
-        Games resp = array[pos];
+        String resp = array[pos].getName();
         n--;
 
-        for (int i = pos; i < n; i++) {
-            array[i] = array[i + 1];
+        for(int i = pos; i < n; i++) {
+            array[i] = array[i+1];
         }
 
         return resp;
     }
 
-    public void mostrar() { // Mostrar
+    public void mostrar() {                                                                      // Mostrar
 
-        System.out.print("[ ");
-        for (int i = 0; i < n; i++) {
-            System.out.print(array[i].getName() + " ");
+        for(int i = 0; i < n; i++) {
+            array[i].imprimir();
         }
-        System.out.println("]");
     }
 
-    public boolean pesquisar(String s) { // Pesquisar
+    // public boolean pesquisar(String s) {                                                         // Pesquisar
 
-        boolean resp = false;
+    //     boolean resp = false;
 
-        for (int i = 0; i < n && resp == false; i++) {
-            resp = (array[i].getName().equals(s));
+    //     for(int i = 0; i < n && resp == false; i++) {
+    //         resp = (array[i].getName().equals(s));
+    //     }
+
+    //     return resp;
+    // }
+
+    public void selecSort() {
+        
+        for(int i = 0; i < (n - 1); i++) {
+
+            int menor = i;
+
+            for(int j = (i + 1); j < n; j++) {
+
+                if((array[menor].getName().compareTo(array[j].getName())) > 0) {
+                    
+                    menor = j;
+                }
+            }
+
+            swap(menor, i);
         }
+    }
 
-        return resp;
+    public void swap(int i, int j) {
+
+        Games temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
     }
 
 }
 
 class Games {
+    
+
+    //ATRIBUTOS -----------------------------------------------------------------------------------
+
     private int app_id;
     private int age;
     private int avg_pt;
@@ -193,26 +253,45 @@ class Games {
     private boolean mac;
     private boolean linux;
 
-    Games() {
-        app_id = 0;
-        name = "";
-        release_date = null;
-        owners = "";
-        age = 0;
-        price = 0;
-        dlcs = 0;
-        languages = null;
-        website = "";
-        windows = true;
-        mac = true;
-        linux = true;
-        upvotes = 0;
-        avg_pt = 0;
-        developers = "";
-        genres = null;
-    }
+    // SimpleDateFormat formataador = new SimpleDateFormat("MMM/yyyy", Locale.US);
 
+
+
+
+
+    //CONSTRUTORES --------------------------------------------------------------------------------
+
+    Games() {
+    app_id = 0;
+    name = "";
+    release_date = null;
+    owners = "";
+    age = 0;
+    price = 0;
+    dlcs = 0;
+    languages = null;
+    website = "";
+    windows = true;
+    mac = true;
+    linux = true;
+    upvotes = 0;
+    avg_pt = 0;
+    developers = "";
+    genres = null;
+    }
+    
+
+
+    //link do dateformat
+    //https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
     SimpleDateFormat formataador = new SimpleDateFormat("MMM/yyyy", Locale.US);
+
+
+
+
+
+
+    //GETS E SETS ---------------------------------------------------------------------------------
 
     public int getAppId() {
         return this.app_id;
@@ -342,6 +421,10 @@ class Games {
         this.genres = genres;
     }
 
+
+
+    //IMPRESSOES ----------------------------------------------------------------------------------
+
     void imprimirPrice() {
         System.out.format(Locale.US, "%.2f ", this.price);
     }
@@ -363,9 +446,9 @@ class Games {
     }
 
     void imprimirWebSite() {
-        if (this.website.isEmpty()) {
+        if(this.website.isEmpty()){
             System.out.print("null ");
-        } else {
+        }else{
             System.out.print(this.website + " ");
         }
     }
@@ -379,19 +462,20 @@ class Games {
         if (horasContadas == 0 && minutosPassados == 0)
             System.out.print("null ");
 
-        else if (horasContadas > 0) {
+        else
+        if(horasContadas > 0){
             System.out.print(horasContadas + "h ");
-        } else {
+        }else{
             System.out.print(horasContadas + "");
 
         }
-        if (minutosPassados > 0) {
+        if(minutosPassados > 0){
             System.out.print("m ");
-        } else {
+        }else{
             System.out.print("");
 
         }
-
+            // MyIO.print(((horasContadas > 0) ? horasContadas + "h " : "") + ((minutosPassados > 0) ? minutosPassados + "m " : ""));
     }
 
     void imprimirGeneros() {
@@ -413,6 +497,7 @@ class Games {
     }
 
     void imprimir() {
+        
         System.out.printf("%d %s %s %s %d ", this.app_id, this.name, formataador.format(this.release_date), this.owners,
                 this.age);
         imprimirPrice();
@@ -424,5 +509,22 @@ class Games {
         imprimirAVG();
         System.out.print(this.developers.replace("\"", "") + " ");
         imprimirGeneros();
+    }
+    
+
+    public static void insertionSort(int[] vetor) {
+        int j;
+        int key;
+        int i;
+    
+        for (j = 1; j < vetor.length; j++)
+        {
+          key = vetor[j];
+          for (i = j - 1; (i >= 0) && (vetor[i] > key); i--)
+          {
+             vetor[i + 1] = vetor[i];
+           }
+            vetor[i + 1] = key;
+        }
     }
 }

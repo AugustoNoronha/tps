@@ -7,20 +7,13 @@ class q5 {
         String[] entrada = new String[1000]; // SET DE ENTRADA
         String[] entradaTosplit = new String[1000]; // SET DE ENTRADA
         Lista list = new Lista(100);
-
+        String command = "", pos = "", aux = "";
         Scanner scanner = new Scanner(new File("/tmp/games.csv"));
-        // Scanner scanner = new Scanner(new File("
-        // D:\\Users\\1412485\\Desktop\\tps\\tp2\\games.csv"));
+        Scanner sc = new Scanner(System.in, "UTF-8");
 
-        // Scanner scanner = new Scanner(new File("E:\\Facudade\\tp2\\games.csv"));
-        int n = 0, x = 0, count = 0;// COUNT
+        int n = 0, x = 0, count = 0, qtd = 0;// COUNT
         Games[] obj = new Games[4403];
-
-        // String file = "/tmp/games.csv";
-        // String file = "E:\\Facudade\\tps\\tp2\\games.csv";
-        // FileReader fr = new FileReader(file);
-        // BufferedReader br = new BufferedReader(fr);
-        // String line = br.readLine();
+        ;
         while (scanner.hasNext()) {
             obj[count] = new Games();
 
@@ -53,7 +46,7 @@ class q5 {
         int contador = 0;
         int stop = 0;
         do {
-            entrada[n] = MyIO.readLine();
+            entrada[n] =  sc.nextLine();
             // MyIO.println(entrada[n]);
 
         } while (!(isFim(entrada[n++]))); // CONDIÇÃO DE PARADA
@@ -67,68 +60,68 @@ class q5 {
             }
         }
 
-        entradaTosplit[n] = MyIO.readLine();
-        boolean finder = true;
-        Games resp;
-        // MyIO.println(entradaTosplit[n]);
-         while (!(isFim(entradaTosplit[n]))){
-            
+        qtd = Integer.parseInt( sc.nextLine());
+        do {
 
-            for (int u = 0; u < Integer.parseInt(entradaTosplit[n]); u++) {
-                String[] split = entradaTosplit[n].split(" ");
-    
-                finder = list.pesquisar(entradaTosplit[n]);
-                if (finder) {
-                    switch (split[0]) {
-                        case "II":
-                            for (int i = 0; i < obj.length; i++) {
-                                if (Integer.parseInt(split[1]) == obj[i].getAppId()) {
-                                    list.inserirInicio(obj[i]);
-                                }
-                            }
-                            break;
-                        case "I*":
-                            for (int i = 0; i < obj.length; i++) {
-                                if (Integer.parseInt(split[1]) == obj[i].getAppId()) {
-                                    list.inserir(obj[i], Integer.parseInt(split[2]));
-                                }
-                            }
-                            break;
-                        case "IF":
-                            for (int i = 0; i < obj.length; i++) {
-                                if (Integer.parseInt(split[1]) == obj[i].getAppId()) {
-                                    list.inserirFim(obj[i]);
-                                }
-                            }
-                            break;
-                        case "RI":
-                            resp = list.removerInicio();
-                            MyIO.print("(R) ");
-                            MyIO.println(resp.getName());
-                            resp = null;
-                            break;
-                        case "R*":
-                            resp = list.remover(Integer.parseInt(split[1]));
-                            MyIO.print("(R) ");
-                            MyIO.println(resp.getName());
-                            resp = null;
-                            break;
-                        case "RF":
-                            resp = list.removerFim();
-                            MyIO.print("(R) ");
-                            MyIO.println(resp.getName());
-                            resp = null;
-                            break;
+            entradaTosplit[x] = sc.nextLine();
+            x++;
+        } while (qtd > x);
 
-                        default:
-                            break;
+        for (int k = 0; k < x; k++) {
+
+            command = entradaTosplit[k].substring(0, 2);
+            if (command.equals("II")) {
+
+                aux = entradaTosplit[k].substring(3);
+
+                for (int l = 0; l < count; l++) {
+
+                    if (Integer.parseInt(aux) == obj[l].getAppId()) {
+
+                        list.inserirInicio(obj[l]);
                     }
                 }
+            } else if (command.equals("IF")) {
+
+                aux = entradaTosplit[k].substring(3);
+
+                for (int a = 0; a < count; a++) {
+
+                    if (Integer.parseInt(aux) == obj[a].getAppId()) {
+
+                        list.inserirFim(obj[a]);
+                    }
+                }
+            } else if (command.equals("I*")) {
+
+                aux = entradaTosplit[k].substring(6);
+                pos = entradaTosplit[k].substring(3, 5);
+
+                for (int b = 0; b < count; b++) {
+
+                    if (Integer.parseInt(aux) == obj[b].getAppId()) {
+
+                        list.inserir(obj[b], Integer.parseInt(pos));
+                    }
+                }
+            } else if (command.equals("RF")) {
+
+                System.out.println("(R) " + list.removerFim().getName());
+            } else if (command.equals("RI")) {
+
+                System.out.println("(R) " + list.removerInicio().getName());
+            } else if (command.equals("R*")) {
+
+                pos = entradaTosplit[k].substring(3, 5);
+
+                System.out.println("(R) " + list.remover(Integer.parseInt(pos)).getName());
             }
 
-            list.mostrar();
         }
 
+        list.mostrar();
+
+        sc.close();
     }
 
     static boolean isFim(String s) {
@@ -311,7 +304,95 @@ class q5 {
         public void setGenres(String[] genres) {
             this.genres = genres;
         }
+
+        void imprimirPrice() {
+            System.out.format(Locale.US, "%.2f ", this.price);
+        }
+    
+        void imprimirLinguas() {
+    
+            System.out.print("[");
+    
+            if (languages.length == 1)
+                System.out.print(languages[0].replaceAll("[\\[\\]']", "") + "] ");
+    
+            else {
+    
+                for (int i = 1; i < languages.length - 1; i++)
+                    System.out.print(languages[i] + ", ");
+    
+                System.out.print(languages[languages.length - 1] + "] ");
+            }
+        }
+    
+        void imprimirWebSite() {
+            if(this.website.isEmpty()){
+                System.out.print("null ");
+            }else{
+                System.out.print(this.website + " ");
+            }
+        }
+    
+        void imprimirUpVotes() {
+            System.out.print((int) Math.round(this.upvotes * 100) + "% ");
+        }
+    
+        void imprimirAVG() {
+            int horasContadas = this.avg_pt / 60, minutosPassados = this.avg_pt % 60;
+            if (horasContadas == 0 && minutosPassados == 0)
+                System.out.print("null ");
+    
+            else
+            if(horasContadas > 0){
+                System.out.print(horasContadas + "h ");
+            }else{
+                System.out.print(horasContadas + "");
+    
+            }
+            if(minutosPassados > 0){
+                System.out.print("m ");
+            }else{
+                System.out.print("");
+    
+            }
+                // MyIO.print(((horasContadas > 0) ? horasContadas + "h " : "") + ((minutosPassados > 0) ? minutosPassados + "m " : ""));
+        }
+    
+        void imprimirGeneros() {
+    
+            System.out.print("[");
+    
+            if (genres.length == 1)
+                System.out.print(genres[0].replace("\"", "") + "]\n");
+    
+            else {
+    
+                System.out.print(genres[0].replace("\"", "") + ", ");
+    
+                for (int i = 1; i < genres.length - 1; i++)
+                    System.out.print(genres[i] + ", ");
+    
+                System.out.print(genres[genres.length - 1].replace("\"", "") + "]\n");
+            }
+        }
+    
+        void imprimir() {
+            
+            System.out.printf("%d %s %s %s %d ", this.app_id, this.name, formataador.format(this.release_date), this.owners,
+                    this.age);
+            imprimirPrice();
+            System.out.print(this.dlcs + " ");
+            imprimirLinguas();
+            imprimirWebSite();
+            System.out.printf("%b %b %b ", this.windows, this.mac, this.linux);
+            imprimirUpVotes();
+            imprimirAVG();
+            System.out.print(this.developers.replace("\"", "") + " ");
+            imprimirGeneros();
+        }
     }
+
+    
 
     static class Lista {
         private Games[] array;
@@ -467,11 +548,10 @@ class q5 {
          * Mostra os elementos da lista separados por espacos.
          */
         public void mostrar() {
-            System.out.print("[ ");
-            for (int i = 0; i < n; i++) {
-                System.out.print(array[i] + " ");
+            for(int i = 0; i < n; i++) {
+                System.out.print("[" + i + "] ");
+                array[i].imprimir();
             }
-            System.out.println("]");
         }
 
         /**
@@ -489,6 +569,12 @@ class q5 {
             }
             return retorno;
         }
+
+        
+    
+       
+
+
     }
 
 }

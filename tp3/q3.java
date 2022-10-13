@@ -2,73 +2,86 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class q4 {
+public class q3 {
 
     public static void main(String[] args) throws Exception {
 
         String[] entrada = new String[1000];
-        String[] segundaEntrada = new String[1000];
-        Scanner sc = new Scanner(new File("/tmp/games.csv"));
-        Scanner scanner = new Scanner(System.in, "UTF-8");
-        int n = 0, count = 0, m = 0;
+        Scanner sc = new Scanner(new File("/tmp/games.csv")); // /tmp/games.csv
+        Scanner scanner = new Scanner(System.in, "ISO-8859-1");
+
+        int n = 0, count = 0;
+
         Games[] obj = new Games[4403];
+
         Lista lista = new Lista();
 
         while (sc.hasNext()) {
 
             obj[count] = new Games();
+
             String[] lineFilter = sc.nextLine().split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+
             obj[count].setAppId(Integer.parseInt(lineFilter[0]));
+
             obj[count].setName(lineFilter[1]);
+
             String dateFormate = lineFilter[2].replace("\"", "");
             String date = dateFormate.substring(0, 3) + "/"
                     + dateFormate.substring(dateFormate.length() - 4, dateFormate.length());
             obj[count].setDate((new SimpleDateFormat("MMM/yyyy", Locale.US).parse(date)));
+
             obj[count].setOwners(lineFilter[3]);
+
             obj[count].setAge(Integer.parseInt(lineFilter[4]));
+
             obj[count].setPrice(Float.parseFloat(lineFilter[5]));
+
             obj[count].setDlcs(Integer.parseInt(lineFilter[6]));
+
             obj[count].setLanguages(lineFilter[7].split("(\"\\[')|(', ')|('\\]\")"));
+
             obj[count].setWebsite(lineFilter[8]);
+
             obj[count].setWindows(Boolean.valueOf(lineFilter[9]));
+
             obj[count].setMac(Boolean.valueOf(lineFilter[10]));
+
             obj[count].setLinux(Boolean.valueOf(lineFilter[11]));
+
             obj[count].setUpVotes(Float.parseFloat(lineFilter[12])
                     / (Float.parseFloat(lineFilter[12]) + Float.parseFloat(lineFilter[13])));
+
             obj[count].setAvg_pt(Integer.parseInt(lineFilter[14]));
+
             obj[count].setDevelopers(lineFilter[15]);
+
             obj[count].setGenres((lineFilter.length > 16) ? lineFilter[16].split(",") : null);
             count++;
+
         }
+
         do {
 
             entrada[n] = scanner.nextLine();
         } while (!(isFim(entrada[n++])));
         n--;
+
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < count; j++) {
-
                 if (Integer.parseInt(entrada[i]) == obj[j].getAppId()) {
-
                     lista.inserirFim(obj[j]);
-                    // obj[j].imprimir();
                 }
             }
         }
-        do {
-            segundaEntrada[m] = scanner.nextLine();
-        } while (!(isFim(segundaEntrada[m++])));
-        m--;
-        for (int k = 0; k < m; k++) {
-            if (lista.pesquisar(segundaEntrada[k]) == false) {
-                System.out.println("NAO");
-            } else {
-                System.out.println("SIM");
-            }
-        }
+
+        lista.insertionSort(lista);
+        lista.mostrar();
+
         sc.close();
         scanner.close();
-    }
+
+    } 
 
     static boolean isFim(String s) {
         return (s.length() == 3 && s.charAt(0) == 'F' && s.charAt(1) == 'I' && s.charAt(2) == 'M');
@@ -76,9 +89,16 @@ public class q4 {
 }
 
 class Lista {
+
+    // ATRIBUTOS
+    // -----------------------------------------------------------------------------------
+    // ATRIBUTOS
     private Games[] array;
     private int n;
 
+    // CONSTRUTORES
+    // --------------------------------------------------------------------------------
+    // CONSTRUTORES
     public Lista() {
         this(1000);
     }
@@ -88,62 +108,79 @@ class Lista {
         n = 0;
     }
 
+    // METODOS
+    // -------------------------------------------------------------------------------------
+    // METODOS
     public void inserirInicio(Games s) throws Exception { // Inserir Inicio
+
         if (n >= array.length) {
             throw new Exception("Tamanho da Lista Excedido");
         }
+
         for (int i = n; i > 0; i--) {
             array[i] = array[i - 1];
         }
+
         array[0] = s;
         n++;
     }
 
     public void inserirFim(Games s) throws Exception { // Inserir Fim
+
         if (n >= array.length) {
             throw new Exception("Tamanho da Lista Excedido");
         }
+
         array[n] = s;
         n++;
     }
 
     public void inserir(Games s, int pos) throws Exception { // Inserir
+
         if (n >= array.length) {
             throw new Exception("Tamanho da Lista Excedido");
         }
+
         for (int i = n; i > pos; i--) {
             array[i] = array[i - 1];
         }
+
         array[pos] = s;
         n++;
     }
 
-    public Games removerInicio() throws Exception { // Remover Inicio
+    public String removerInicio() throws Exception { // Remover Inicio
+
         if (n == 0) {
             throw new Exception("Lista vazia");
         }
-        Games resp = array[0];
+
+        String resp = array[0].getName();
         n--;
+
         for (int i = 0; i < n; i++) {
             array[i] = array[i + 1];
         }
+
         return resp;
     }
 
-    public Games removerFim() throws Exception { // Remover Fim
+    public String removerFim() throws Exception { // Remover Fim
+
         if (n == 0) {
             throw new Exception("Lista vazia");
         }
-        return array[--n];
+
+        return array[--n].getName();
     }
 
-    public Games remover(int pos) throws Exception { // Remover
+    public String remover(int pos) throws Exception { // Remover
 
         if (n == 0 || pos < 0 || pos >= n) {
             throw new Exception("Posicao inexistente da Lista");
         }
 
-        Games resp = array[pos];
+        String resp = array[pos].getName();
         n--;
 
         for (int i = pos; i < n; i++) {
@@ -155,27 +192,69 @@ class Lista {
 
     public void mostrar() { // Mostrar
 
-        System.out.print("[ ");
         for (int i = 0; i < n; i++) {
-            System.out.print(array[i].getName() + " ");
+            array[i].imprimir();
         }
-        System.out.println("]");
     }
 
-    public boolean pesquisar(String s) { // Pesquisar
+    // public boolean pesquisar(String s) { // Pesquisar
 
-        boolean resp = false;
+    // boolean resp = false;
 
-        for (int i = 0; i < n && resp == false; i++) {
-            resp = (array[i].getName().equals(s));
+    // for(int i = 0; i < n && resp == false; i++) {
+    // resp = (array[i].getName().equals(s));
+    // }
+
+    // return resp;
+    // }
+
+    // public void selecSort() {
+
+    // for(int i = 0; i < (n - 1); i++) {
+
+    // int menor = i;
+
+    // for(int j = (i + 1); j < n; j++) {
+
+    // if((array[menor].getName().compareTo(array[j].getName())) > 0) {
+
+    // menor = j;
+    // }
+    // }
+
+    // swap(menor, i);
+    // }
+    // }
+
+    // public void swap(int i, int j) {
+
+    // Games temp = array[i];
+    // array[i] = array[j];
+    // array[j] = temp;
+    // }
+    public void insertionSort(Lista list) {
+        int j;
+        int key;
+        int i;
+        Games[] vetor;
+        vetor = list.array;  
+
+        for (j = 1; j < vetor.length; j++) {
+            key = vetor[j].getAppId()   ;
+            for (i = j - 1; (i >= 0) && (vetor[i].getAppId() > 0) ; i--) {
+                vetor[i + 1] = vetor[i];
+            }
+            vetor[i + 1].setAppId(key);
         }
-
-        return resp;
     }
 
 }
 
 class Games {
+
+    // ATRIBUTOS
+    // -----------------------------------------------------------------------------------
+
     private int app_id;
     private int age;
     private int avg_pt;
@@ -192,6 +271,11 @@ class Games {
     private boolean windows;
     private boolean mac;
     private boolean linux;
+
+    // SimpleDateFormat formataador = new SimpleDateFormat("MMM/yyyy", Locale.US);
+
+    // CONSTRUTORES
+    // --------------------------------------------------------------------------------
 
     Games() {
         app_id = 0;
@@ -212,7 +296,12 @@ class Games {
         genres = null;
     }
 
+    // link do dateformat
+    // https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
     SimpleDateFormat formataador = new SimpleDateFormat("MMM/yyyy", Locale.US);
+
+    // GETS E SETS
+    // ---------------------------------------------------------------------------------
 
     public int getAppId() {
         return this.app_id;
@@ -342,6 +431,9 @@ class Games {
         this.genres = genres;
     }
 
+    // IMPRESSOES
+    // ----------------------------------------------------------------------------------
+
     void imprimirPrice() {
         System.out.format(Locale.US, "%.2f ", this.price);
     }
@@ -391,7 +483,8 @@ class Games {
             System.out.print("");
 
         }
-
+        // MyIO.print(((horasContadas > 0) ? horasContadas + "h " : "") +
+        // ((minutosPassados > 0) ? minutosPassados + "m " : ""));
     }
 
     void imprimirGeneros() {
@@ -413,6 +506,7 @@ class Games {
     }
 
     void imprimir() {
+
         System.out.printf("%d %s %s %s %d ", this.app_id, this.name, formataador.format(this.release_date), this.owners,
                 this.age);
         imprimirPrice();
@@ -425,4 +519,5 @@ class Games {
         System.out.print(this.developers.replace("\"", "") + " ");
         imprimirGeneros();
     }
+
 }
