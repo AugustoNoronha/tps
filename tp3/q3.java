@@ -62,10 +62,12 @@ public class q3 {
         }
 
         do {
-
             entrada[n] = scanner.nextLine();
         } while (!(isFim(entrada[n++])));
         n--;
+
+        sc.close();
+        scanner.close();
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < count; j++) {
@@ -75,12 +77,8 @@ public class q3 {
             }
         }
 
-        lista.insertionSort(lista);
+        lista.insertionSort();
         lista.mostrar();
-
-        sc.close();
-        scanner.close();
-
     } 
 
     static boolean isFim(String s) {
@@ -197,54 +195,19 @@ class Lista {
         }
     }
 
-    // public boolean pesquisar(String s) { // Pesquisar
-
-    // boolean resp = false;
-
-    // for(int i = 0; i < n && resp == false; i++) {
-    // resp = (array[i].getName().equals(s));
-    // }
-
-    // return resp;
-    // }
-
-    // public void selecSort() {
-
-    // for(int i = 0; i < (n - 1); i++) {
-
-    // int menor = i;
-
-    // for(int j = (i + 1); j < n; j++) {
-
-    // if((array[menor].getName().compareTo(array[j].getName())) > 0) {
-
-    // menor = j;
-    // }
-    // }
-
-    // swap(menor, i);
-    // }
-    // }
-
-    // public void swap(int i, int j) {
-
-    // Games temp = array[i];
-    // array[i] = array[j];
-    // array[j] = temp;
-    // }
-    public void insertionSort(Lista list) {
+    public void insertionSort() {
         int j;
         int key;
-        int i;
-        Games[] vetor;
-        vetor = list.array;  
+        int i;  
 
-        for (j = 1; j < vetor.length; j++) {
-            key = vetor[j].getAppId()   ;
-            for (i = j - 1; (i >= 0) && (vetor[i].getAppId() > 0) ; i--) {
-                vetor[i + 1] = vetor[i];
+        for (j = 1; j < n; j++) {
+            //key = array[j].getAppId();
+            //MyIO.println(key);
+            Games temp = array[j].clone();
+            for (i = j - 1; (i >= 0) && (array[i].getAppId() > temp.getAppId()); i--) {
+                array[i + 1] = array[i].clone();
             }
-            vetor[i + 1].setAppId(key);
+            array[i + 1] = temp.clone();
         }
     }
 
@@ -520,4 +483,24 @@ class Games {
         imprimirGeneros();
     }
 
+    public Games clone(){
+        Games temp = new Games();
+        temp.app_id = this.app_id;
+        temp.age = this.age;
+        temp.avg_pt = this.avg_pt;
+        temp.dlcs = this.dlcs;
+        temp.release_date = this.release_date;
+        temp.name = this.name;
+        temp.owners = this.owners;
+        temp.website = this.website;
+        temp.developers = this.developers;
+        temp.languages = this.languages;
+        temp.genres = this.genres;
+        temp.price = this.price;
+        temp.upvotes = this.upvotes;
+        temp.windows = this.windows;
+        temp.mac = this.mac;
+        temp.linux = this.linux;
+        return temp;
+    }
 }
