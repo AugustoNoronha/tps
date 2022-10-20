@@ -73,7 +73,7 @@ public class q9 {
         }
 
         // lista.callquicksortName();
-        lista.bobbleSort();
+        lista.callMerge();
         lista.mostrar();
 
         sc.close();
@@ -220,7 +220,7 @@ class Lista {
      }
     
     public void callMerge(){
-        merge(0,n-1);
+        merge(0, n-1);
      }
 
      public void merge(int esq, int dir){
@@ -240,27 +240,30 @@ class Lista {
         n1 = meio-esq+1;
         n2 = dir - meio;
   
-        Float[] a1 = new Float[n1+1];
-        Float[] a2 = new Float[n2+1];
+        Games[] a1 = new Games[n1+1];
+        Games[] a2 = new Games[n2+1];
   
         //Inicializar primeiro subarray
         for(i = 0; i < n1; i++){
-           a1[i] = array[esq+i].getUpVotes();
+           a1[i] = array[esq+i].clone();
         }
   
         //Inicializar segundo subarray
         for(j = 0; j < n2; j++){
-           a2[j] = array[meio+j+1].getUpVotes();
+           a2[j] = array[meio+j+1].clone();
         }
   
         //Sentinela no final dos dois arrays
         int max = 0x7FFFFFFF;
         float f = max;
-        a1[i] = a2[j] = f;
+        a1[i] = new Games();
+        a2[j] = new Games();
+        a1[i].setUpVotes(f);
+        a2[j].setUpVotes(f);
   
         //Intercalacao propriamente dita
         for(i = j = 0, k = esq; k <= dir; k++){
-           array[k] = (a1[i] <= a2[j]) ? a1[i++] : a2[j++];
+           array[k] = (a1[i].getUpVotes() <= a2[j].getUpVotes()) ? a1[i++] : a2[j++];
         }
      }
 
@@ -545,5 +548,26 @@ class Games {
         imprimirAVG();
         System.out.print(this.developers.replace("\"", "") + " ");
         imprimirGeneros();
+    }
+
+    public Games clone(){
+        Games temp = new Games();
+        temp.app_id = this.app_id;
+        temp.age = this.age;
+        temp.avg_pt = this.avg_pt;
+        temp.dlcs = this.dlcs;
+        temp.release_date = this.release_date;
+        temp.name = this.name;
+        temp.owners = this.owners;
+        temp.website = this.website;
+        temp.developers = this.developers;
+        temp.languages = this.languages;
+        temp.genres = this.genres;
+        temp.price = this.price;
+        temp.upvotes = this.upvotes;
+        temp.windows = this.windows;
+        temp.mac = this.mac;
+        temp.linux = this.linux;
+        return temp;
     }
 }
